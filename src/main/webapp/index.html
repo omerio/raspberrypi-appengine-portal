@@ -1,0 +1,104 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+          <div class="container">
+            <h1>Raspberry Pi Dashboard</h1>
+            <p>This is an example of a real-time dashboard running on Google App Engine with Raspberry Pi Zero sending it sensory data using Cloud Endpoints.
+              The dashboard uses Google Charts for visualization and the Google App Engine Channel API for real-time updates.
+              The voltage data is from my 6.5 x 6.5cm solar cell. More details <a href="">here</a></p>
+            <p><a class="btn btn-primary btn-lg" href="#" role="button">View on GitHub</a></p>
+          </div>
+        </div>
+
+        <div class="container">
+          <!-- Example row of columns -->
+
+          <div class="row panel panel-default">
+            <div class="panel-heading">
+              <h2>Voltage</h2>
+            </div>
+            <div class="col-md-9">
+              <div id="chart_voltage"></div>
+            </div>
+            <div class="col-md-3 col-value">
+              <h3>Current Value</h3>
+              <h1><span class="label label-success label-value"> <span id="value_voltage">0</span> V</span></h1>
+            </div>
+          </div>
+
+          <div class="row panel panel-default">
+            <div class="panel-heading">
+              <h2>Illuminance</h2>
+            </div>
+            <div class="col-md-9">
+              <div id="chart_illuminance"></div>
+            </div>
+            <div class="col-md-3 col-value">
+              <h3>Current Value</h3>
+              <h1><span class="label label-info label-value"> <span id="value_illuminance">0</span> LUX</span></h1>
+            </div>
+          </div>
+
+          <div class="row panel panel-default">
+            <div class="panel-heading">
+              <h2>Temperature</h2>
+            </div>
+            <div class="col-md-9">
+              <div id="chart_temperature"></div>
+            </div>
+            <div class="col-md-3 col-value">
+              <h3>Current Value</h3>
+              <h1><span class="label label-warning label-value"> <span id="value_temperature">0</span> &#8451;</span></h1>
+            </div>
+          </div>
+
+          <hr>
+
+          <footer>
+
+          </footer>
+        </div> <!-- /container -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+        <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/jquery.animateNumber.min.js"></script>
+        <script src="js/vendor/moment.min.js"></script>
+
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script src="/_ah/channel/jsapi"></script>
+
+        <script src="js/main.js"></script>
+
+        <script>
+
+            google.load('visualization', '1', {packages: ['corechart', 'line']});
+            //google.setOnLoadCallback(app.drawCurveTypes);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,79 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://${app.id}.appspot.com/_ah/api",
+  "name" : "sensor",
+  "version" : "v1",
+  "defaultVersion" : false,
+  "discovery" : [ "PUBLIC" ],
+  "adapter" : {
+    "bns" : "https://${app.id}.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "methods" : {
+    "sensor.data.create" : {
+      "path" : "create",
+      "httpMethod" : "post",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ "793585242699-2h42ldljgpo3so38cdkir0667omm8t1p.apps.googleusercontent.com" ],
+      "clientIds" : [ "793585242699-2h42ldljgpo3so38cdkir0667omm8t1p.apps.googleusercontent.com", "793585242699-2h42ldljgpo3so38cdkir0667omm8t1p.apps.googleusercontent.com", "793585242699-2h42ldljgpo3so38cdkir0667omm8t1p.apps.googleusercontent.com" ],
+      "rosyMethod" : "uk.co.inetria.pi.endpoint.SensorDataEndpoint.create",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "SensorData" : {
+        "id" : "SensorData",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "dateTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "value" : {
+            "type" : "number"
+          },
+          "channel" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "uk.co.inetria.pi.endpoint.SensorDataEndpoint.create" : {
+        "request" : {
+          "$ref" : "SensorData"
+        },
+        "response" : {
+          "$ref" : "SensorData"
+        }
+      }
+    }
+  }
+}
