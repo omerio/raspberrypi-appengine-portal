@@ -9,7 +9,7 @@
     <artifactId>raspberrypi-portal</artifactId>
 
     <properties>
-        <app.id>raspberrypi-1180</app.id>
+        <app.id>raspberrypi-dash</app.id>
         <app.version>v1</app.version>
         <appengine.version>1.9.30</appengine.version>
         <objectify.version>5.1.9</objectify.version>
