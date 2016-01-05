@@ -35,6 +35,28 @@
           </div>
         </div>
 
+
+        <div class="well well-sm container">
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="range">Time range</label>
+              <select class="form-control" id="time-range" >
+                <option value="1">Last minute</option>
+                <option value="60">Last hour</option>
+                <option value="1440">Last day</option>
+                <option value="43200">Last 30 days</option>
+              </select>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" id="refresh-charts"> Auto refresh charts
+              </label>
+            </div>
+            <button type="submit" class="btn btn-default" id="submit">Update</button>
+          </form>
+        </div>
+
+
         <div class="container">
           <!-- Example row of columns -->
 

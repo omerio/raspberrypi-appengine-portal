@@ -26,13 +26,16 @@ public class Client {
     @Id
     private String id;
     
+    private String token;
+    
     public Client() {
         super();
     }
     
-    public Client(String id) {
+    public Client(String id, String token) {
         super();
         this.id = id;
+        this.token = token;
     }
     
     //------- CRUD
@@ -69,4 +72,11 @@ public class Client {
         this.id = id;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

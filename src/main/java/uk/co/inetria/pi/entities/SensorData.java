@@ -6,9 +6,7 @@ package uk.co.inetria.pi.entities;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.googlecode.objectify.Key;
@@ -52,11 +50,11 @@ public class SensorData implements Serializable {
 		return ofy().load().type(SensorData.class).list();
 	}
 	
-	public static List<SensorData> findLastThirtyDays()   {
+	public static List<SensorData> findByDateTime(Date date)   {
 	    
-	    Calendar calendar = new GregorianCalendar();
+	    /*Calendar calendar = new GregorianCalendar();
 	    calendar.add(Calendar.DATE, -30);
-	    Date date = calendar.getTime();
+	    Date date = calendar.getTime();*/
 	    
         return ofy().load().type(SensorData.class)
                 .filter("dateTime >=", date).list();

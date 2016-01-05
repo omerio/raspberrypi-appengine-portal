@@ -12,6 +12,14 @@ $(function () {
     // slow down the rate of channel requests on the dev server
     goog.appengine.Socket.POLLING_TIMEOUT_MS = 20000;
   }
+
+  $('#submit').click(function(e) {
+    app.loadData(false);
+    app.refreshChart = $('#refresh-charts').prop('checked');
+    e.preventDefault();
+  });
+
+  // load the data
   app.loadData();
 
 });
@@ -25,31 +33,51 @@ window.app = window.app || {};
 
 app.dateFormat = "MMM D, YYYY h:m:s a";
 
+app.refreshChart = false;
+
 /**
  * Load the initial data
  */
-app.loadData = function() {
-  $.ajax({
-			url: "/getdata",
-			method: "GET"
+app.loadData = function(initChannel) {
 
-	}).done(app.handleLoadSuccess).fail(function () {
-		toastr.error("Failed to load sensor data");
-	});
+  // by default we are initializing the channel
+  if(typeof initChannel === 'undefined') {
+    initChannel = true;
+  }
+
+  $('#submit').prop('disabled', true);
+
+  $.ajax({
+	  url: "/getdata",
+	  data: {
+      'timeRange': $('#time-range').val()
+    },
+	  type: "GET",
+	  success: app.handleLoadSuccess.bind(this, initChannel),
+	  error: function() {
+		  toastr.error("Failed to load sensor data");
+	  },
+	  complete: function() {
+		  $('#submit').prop('disabled', false);
+	  }
+  });
 }
 
-/*{
-  "data":[{"id":4855443348258816,"dateTime":"Jan 4, 2016 2:04:54 PM","value":10.832920314822168,"channel":"Temperature"},
-    {"id":4679521487814656,"dateTime":"Jan 4, 2016 2:07:02 PM","value":20.51223558504378,"channel":"Temperature"}
-  ],
-  "clientId":"wlwtcqwbj7o6"
-}*/
-app.handleLoadSuccess = function(data) {
-  // moment("Jan 4, 2016 2:07:02 PM", "MMM D, YYYY h:m:s a")
-  /*data.addRows([
-    [moment("01/04/2015", "DD/MM/YYYY").toDate(), 20.8], [moment("02/04/2015", "DD/MM/YYYY").toDate(), 19.2],
-    [moment("03/04/2015", "DD/MM/YYYY").toDate(), 15.88], [moment("04/04/2015", "DD/MM/YYYY").toDate(), 21.8]
-  ]);*/
+/**/
+
+/**
+ * Handle the response from the server. The data should look something like this:
+ * {
+ *   "data":[{"id":4855443348258816,"dateTime":"Jan 4, 2016 2:04:54 PM","value":10.832920314822168,"channel":"Temperature"},
+ *     {"id":4679521487814656,"dateTime":"Jan 4, 2016 2:07:02 PM","value":20.51223558504378,"channel":"Temperature"}
+ *   ],
+ *   "clientId":"wlwtcqwbj7o6"
+ * }
+ * @param  {[type]} data - sensory data and channel token
+ */
+app.handleLoadSuccess = function(initChannel, data) {
+
+  /*data.addRows();*/
   toastr.success("Sensor data loaded successfully");
 
   var sensorsData = data.data;
@@ -72,7 +100,12 @@ app.handleLoadSuccess = function(data) {
     },
   };
 
-  //separate and transform the data
+  //separate and transform the data, the final array should look something like this
+  // [
+  //    [moment("01/04/2015", "DD/MM/YYYY").toDate(), 20.8],
+  //    [moment("02/04/2015", "DD/MM/YYYY").toDate(), 19.2],
+  //    ...
+  // ]
   for(var i = 0; i < sensorsData.length; i++) {
     var sensorData = sensorsData[i];
     // the type temp, volt, illum, etc...
@@ -88,12 +121,22 @@ app.handleLoadSuccess = function(data) {
     app.drawLineChart(dataMap[key].data, 'chart_' + key, dataMap[key].label, dataMap[key].color);
   }
 
-  app.token = data.token;
+  if(initChannel) {
+    app.token = data.token;
 
-  // we have a channel token, now initialize it
-  app.initChannel();
+    // we have a channel token, now initialize it
+    app.initChannel();
+  }
 }
 
+/**
+ * Draw a Google line chart
+ * @param  {Array} rows - rows of data to draw
+ * @param  {String} id - the id of the chart div
+ * @param  {String} name - the name of the chart
+ * @param  {String} color - the colour of the chart
+ * @see https://developers.google.com/chart/interactive/docs/gallery/linechart?hl=en
+ */
 app.drawLineChart = function(rows, id, name, color) {
   var data = new google.visualization.DataTable();
 
@@ -114,23 +157,8 @@ app.drawLineChart = function(rows, id, name, color) {
 };
 
 /**
- * Handle the Channel message
- * @param  {String} message - the channel message
- */
-app.handleChannelMessage = function(message) {
-	console.log(message);
-
-  var data = JSON.parse(message.data);
-
-  // the type temp, volt, illum, etc...
-  var type = data.channel.toLowerCase();
-
-  // set the current value and animate it
-  $('#value_' + type).animateNumber({ number: data.value });
-};
-
-/**
  * initialise the channel
+ * @see https://cloud.google.com/appengine/docs/java/channel/javascript
  */
 app.initChannel = function() {
   setTimeout(function() {
@@ -157,4 +185,25 @@ app.initChannel = function() {
 
 		socket.onmessage = app.handleChannelMessage;
   }, 500);
+};
+
+/**
+ * Handle the Channel message
+ * @param  {String} message - the channel message
+ * @see https://cloud.google.com/appengine/docs/java/channel/javascript
+ */
+app.handleChannelMessage = function(message) {
+	console.log(message);
+
+  var data = JSON.parse(message.data);
+
+  // the type temp, volt, illum, etc...
+  var type = data.channel;
+
+  // set the current value and animate it
+  $('#value_' + type).animateNumber({ number: data.value });
+
+  if(app.refreshChart) {
+    app.loadData(false);
+  }
 };
