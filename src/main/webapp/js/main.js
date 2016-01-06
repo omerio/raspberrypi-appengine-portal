@@ -13,6 +13,8 @@ $(function () {
     goog.appengine.Socket.POLLING_TIMEOUT_MS = 20000;
   }
 
+	app.refreshChart = $('#refresh-charts').prop('checked');
+
   $('#submit').click(function(e) {
     app.loadData(false);
     app.refreshChart = $('#refresh-charts').prop('checked');
