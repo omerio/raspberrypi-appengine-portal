@@ -77,8 +77,10 @@ app.loadData = function(initChannel) {
  */
 app.handleLoadSuccess = function(initChannel, data) {
 
-  /*data.addRows();*/
-  toastr.success("Sensor data loaded successfully");
+	// first time only
+  if(!app.token) {
+  	toastr.success("Sensor data loaded successfully");
+	}
 
   var sensorsData = data.data;
   // in the future this could be a dynamic list
@@ -119,6 +121,18 @@ app.handleLoadSuccess = function(initChannel, data) {
   // draw the charts
   for(var key in dataMap) {
     app.drawLineChart(dataMap[key].data, 'chart_' + key, dataMap[key].label, dataMap[key].color);
+		var length = dataMap[key].data.length;
+
+		// update the current value fields
+		// only do it the first time we load the data, subsequently it's done by the channel message
+		// app.handleChannelMessage
+		if(!app.token) {
+			if(dataMap[key].data.length > 0) {
+				// the latest item is the current value
+				sensorData = dataMap[key].data[length - 1];
+				$('#value_' + key).animateNumber({ number: sensorData[1] });
+			}
+		}
   }
 
   if(initChannel) {
