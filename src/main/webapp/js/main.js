@@ -3,7 +3,7 @@
  */
 $(function () {
   // toastr configurations
-	toastr.options.extendedTimeOut = 1000;
+	toastr.options.extendedTimeOut = 3000;
 	toastr.options.timeOut = 1000;
 	toastr.options.fadeOut = 250;
 	toastr.options.fadeIn = 250;
@@ -20,6 +20,8 @@ $(function () {
     app.refreshChart = $('#refresh-charts').prop('checked');
     e.preventDefault();
   });
+
+	toastr.info("Please wait loading sensor data...");
 
   // load the data
   app.loadData();
