@@ -219,7 +219,20 @@ app.handleChannelMessage = function(message) {
   var type = data.channel;
 
   // set the current value and animate it
-  $('#value_' + type).animateNumber({ number: data.value });
+  $('#value_' + type).animateNumber({
+		number: data.value,
+		numberStep: function(now, tween) {
+      var floored_number = Math.floor(now),
+          target = $(tween.elem);
+
+			// values like volt needs to have 2 decimal places		
+			if(floored_number !== now) {
+				floored_number = now.toFixed(2);
+			}
+
+      target.text(floored_number);
+    }
+	});
 
   if(app.refreshChart) {
     app.loadData(false);
