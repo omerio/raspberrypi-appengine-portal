@@ -2,6 +2,9 @@
 
 A Java based, [Google App Engine] (https://developers.google.com/appengine) real time dashboard application that uses [Cloud Endpoint](https://developers.google.com/appengine/docs/java/endpoints/) and the [Channel API](https://cloud.google.com/appengine/docs/java/channel/). The dashboard receives sensor data from a Raspberry Pi Zero running a Cloud Endpoint [client application][8].
 
+
+![Alt text](http://omerio.com/wp-content/uploads/2016/01/raspberrypid1.png "Sensor Dashboard")
+
 ## Live Demo
 - [https://raspberrypi-dash.appspot.com/](https://raspberrypi-dash.appspot.com/)
 
