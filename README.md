@@ -20,6 +20,7 @@ A Java based, [Google App Engine] (https://developers.google.com/appengine) real
 ![Alt text](http://omerio.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-16-at-16.12.36.png "Create OAuth 2.0 Client")
 
 ## Setup Instructions
+1. Checkout the project `git clone https://github.com/omerio/raspberrypi-appengine-portal.git`
 
 1. Update the value of `app.id` & `app.version` in [`pom.xml`](https://github.com/omerio/raspberrypi-appengine-portal/blob/master/pom.xml) to the app ID you have registered in the App Engine admin console and would like to use to host your instance of this sample.
 
