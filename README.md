@@ -8,6 +8,9 @@ A Java based, [Google App Engine] (https://developers.google.com/appengine) real
 ## Live Demo
 - [https://raspberrypi-dash.appspot.com/](https://raspberrypi-dash.appspot.com/)
 
+## Overall Architecture
+![Alt text](http://omerio.com/wp-content/uploads/2016/01/pi_appengine_architecture.png "Architecture")
+
 ## Documentation
 - [Real Time Sensor Dashboard Using Google App Engine and Raspberry Pi Zero](http://omerio.com/2016/01/16/real-time-sensor-dashboard-using-google-app-engine-and-raspberry-pi-zero/)
 
