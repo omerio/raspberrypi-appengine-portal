@@ -1,19 +1,19 @@
 /**
  * document onload
  */
-$(function () {
+$(function() {
   // toastr configurations
-	toastr.options.extendedTimeOut = 3000;
-	toastr.options.timeOut = 1000;
-	toastr.options.fadeOut = 250;
-	toastr.options.fadeIn = 250;
+  toastr.options.extendedTimeOut = 3000;
+  toastr.options.timeOut = 1000;
+  toastr.options.fadeOut = 250;
+  toastr.options.fadeIn = 250;
 
-  if(window.location.hostname === 'localhost' && window.goog) {
+  if (window.location.hostname === 'localhost' && window.goog) {
     // slow down the rate of channel requests on the dev server
     goog.appengine.Socket.POLLING_TIMEOUT_MS = 20000;
   }
 
-	app.refreshChart = $('#refresh-charts').prop('checked');
+  app.refreshChart = $('#refresh-charts').prop('checked');
 
   $('#submit').click(function(e) {
     app.loadData(false);
@@ -21,7 +21,7 @@ $(function () {
     e.preventDefault();
   });
 
-	toastr.info("Please wait loading sensor data...");
+  toastr.info("Please wait loading sensor data...");
 
   // load the data
   app.loadData();
@@ -45,25 +45,25 @@ app.refreshChart = false;
 app.loadData = function(initChannel) {
 
   // by default we are initializing the channel
-  if(typeof initChannel === 'undefined') {
+  if (typeof initChannel === 'undefined') {
     initChannel = true;
   }
 
   $('#submit').prop('disabled', true);
 
   $.ajax({
-	  url: "/getdata",
-	  data: {
+    url: "/getdata",
+    data: {
       'timeRange': $('#time-range').val()
     },
-	  type: "GET",
-	  success: app.handleLoadSuccess.bind(this, initChannel),
-	  error: function() {
-		  toastr.error("Failed to load sensor data");
-	  },
-	  complete: function() {
-		  $('#submit').prop('disabled', false);
-	  }
+    type: "GET",
+    success: app.handleLoadSuccess.bind(this, initChannel),
+    error: function() {
+      toastr.error("Failed to load sensor data");
+    },
+    complete: function() {
+      $('#submit').prop('disabled', false);
+    }
   });
 }
 
@@ -81,10 +81,10 @@ app.loadData = function(initChannel) {
  */
 app.handleLoadSuccess = function(initChannel, data) {
 
-	// first time only
-  if(!app.token) {
-  	toastr.success("Sensor data loaded successfully");
-	}
+  // first time only
+  if (!app.token) {
+    toastr.success("Sensor data loaded successfully");
+  }
 
   var sensorsData = data.data;
   // in the future this could be a dynamic list
@@ -112,34 +112,36 @@ app.handleLoadSuccess = function(initChannel, data) {
   //    [moment("02/04/2015", "DD/MM/YYYY").toDate(), 19.2],
   //    ...
   // ]
-  for(var i = 0; i < sensorsData.length; i++) {
+  for (var i = 0; i < sensorsData.length; i++) {
     var sensorData = sensorsData[i];
     // the type temp, volt, illum, etc...
     var type = sensorData.channel.toLowerCase();
 
-    if(dataMap[type]) {
+    if (dataMap[type]) {
       dataMap[type].data.push([moment(sensorData.dateTime, app.dateFormat).toDate(), sensorData.value]);
     }
   }
 
   // draw the charts
-  for(var key in dataMap) {
+  for (var key in dataMap) {
     app.drawLineChart(dataMap[key].data, 'chart_' + key, dataMap[key].label, dataMap[key].color);
-		var length = dataMap[key].data.length;
+    var length = dataMap[key].data.length;
 
-		// update the current value fields
-		// only do it the first time we load the data, subsequently it's done by the channel message
-		// app.handleChannelMessage
-		if(!app.token) {
-			if(dataMap[key].data.length > 0) {
-				// the latest item is the current value
-				sensorData = dataMap[key].data[length - 1];
-				$('#value_' + key).animateNumber({ number: sensorData[1] });
-			}
-		}
+    // update the current value fields
+    // only do it the first time we load the data, subsequently it's done by the channel message
+    // app.handleChannelMessage
+    if (!app.token) {
+      if (dataMap[key].data.length > 0) {
+        // the latest item is the current value
+        sensorData = dataMap[key].data[length - 1];
+        $('#value_' + key).animateNumber({
+          number: sensorData[1]
+        });
+      }
+    }
   }
 
-  if(initChannel) {
+  if (initChannel) {
     app.token = data.token;
 
     // we have a channel token, now initialize it
@@ -165,8 +167,8 @@ app.drawLineChart = function(rows, id, name, color) {
 
   var options = {
     legend: {
-			position: 'none'
-		},
+      position: 'none'
+    },
     colors: [color]
   };
 
@@ -180,28 +182,28 @@ app.drawLineChart = function(rows, id, name, color) {
  */
 app.initChannel = function() {
   setTimeout(function() {
-		var channel = new goog.appengine.Channel(app.token);
-		var handler = {
-			'onopen': function() {
-				console.log("socket opened");
-		  },
-			'onmessage': app.handleChannelMessage,
-			'onerror': function() {
-				toastr.error("Failed to load sensor data, please refresh the page");
-			},
-			'onclose': function() {
-				console.log("Channel close");
-				// if the channel token is expired, the channel will be closed.
-				// in this case a reload should initialize a new token
-				toastr.error("Failed to load sensor data, please refresh the page");
-				/*setTimeout(function() {
-					location.reload();
-				}, 5000);*/
-			}
-		};
-		var socket = channel.open(handler);
+    var channel = new goog.appengine.Channel(app.token);
+    var handler = {
+      'onopen': function() {
+        console.log("socket opened");
+      },
+      'onmessage': app.handleChannelMessage,
+      'onerror': function() {
+        toastr.error("Failed to load sensor data, please refresh the page");
+      },
+      'onclose': function() {
+        console.log("Channel close");
+        // if the channel token is expired, the channel will be closed.
+        // in this case a reload should initialize a new token
+        toastr.error("Failed to load sensor data, please refresh the page");
+        /*setTimeout(function() {
+        	location.reload();
+        }, 5000);*/
+      }
+    };
+    var socket = channel.open(handler);
 
-		socket.onmessage = app.handleChannelMessage;
+    socket.onmessage = app.handleChannelMessage;
   }, 500);
 };
 
@@ -211,7 +213,7 @@ app.initChannel = function() {
  * @see https://cloud.google.com/appengine/docs/java/channel/javascript
  */
 app.handleChannelMessage = function(message) {
-	console.log(message);
+  console.log(message);
 
   var data = JSON.parse(message.data);
 
@@ -220,21 +222,21 @@ app.handleChannelMessage = function(message) {
 
   // set the current value and animate it
   $('#value_' + type).animateNumber({
-		number: data.value,
-		numberStep: function(now, tween) {
+    number: data.value,
+    numberStep: function(now, tween) {
       var floored_number = Math.floor(now),
-          target = $(tween.elem);
+        target = $(tween.elem);
 
-			// values like volt needs to have 2 decimal places		
-			if(floored_number !== now) {
-				floored_number = now.toFixed(2);
-			}
+      // values like volt needs to have 2 decimal places
+      if (floored_number !== now) {
+        floored_number = now.toFixed(2);
+      }
 
       target.text(floored_number);
     }
-	});
+  });
 
-  if(app.refreshChart) {
+  if (app.refreshChart) {
     app.loadData(false);
   }
 };
