@@ -63,8 +63,8 @@ public class SensorData implements Serializable {
 	public static List<SensorData> findByChannelStartsWith(String start) {
 		
 		return ofy().cache(false).load().type(SensorData.class)
-	    		.filter("name >=", start)
-	    		.filter("name <=", start + "\ufffd").list();
+	    		.filter("channel >=", start)
+	    		.filter("channel <=", start + "\ufffd").list();
 	}
 	
 	// -----------------------
